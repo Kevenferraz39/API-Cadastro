@@ -1,5 +1,5 @@
 # Criando uma API em JavaScript para Cadastro Automático no MongoDB
-https://chat.openai.com/share/17d2a4bf-4ca6-4cb3-bb01-453c48529382
+
 Para criar uma API em JavaScript que realiza o cadastro automático de dados fornecidos pelo usuário em um banco de dados MongoDB, siga os passos abaixo. Este exemplo utiliza Node.js e Express para criar o servidor da API, e MongoDB como banco de dados. Certifique-se de ter o Node.js e o npm instalados no seu ambiente.
 
 ## 1. Instalação de Dependências
