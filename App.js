@@ -1,42 +1,46 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const mysql = require('mysql');
 
 const app = express();
 const port = 3000;
 
+// Conecta ao banco de dados MongoDB (certifique-se de ter o MongoDB instalado)
+mongoose.connect('mongodb://localhost/seu_banco_de_dados', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Define o esquema do banco de dados
+const Schema = mongoose.Schema;
+const userSchema = new Schema({
+  nome: String,
+  email: String,
+  // Adicione mais campos conforme necessário
+});
+
+const User = mongoose.model('User', userSchema);
+
+// Middleware para analisar o corpo das requisições
 app.use(bodyParser.json());
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'seu_usuario',
-  password: 'sua_senha',
-  database: 'seu_banco_de_dados',
-});
-
-db.connect(err => {
-  if (err) {
-    console.error('Erro ao conectar ao banco de dados:', err);
-  } else {
-    console.log('Conexão ao banco de dados estabelecida.');
-  }
-});
-
-app.post('/cadastrar', (req, res) => {
+// Rota para cadastrar um usuário
+app.post('/api/cadastrar', (req, res) => {
   const { nome, email } = req.body;
 
-  const sql = 'INSERT INTO usuarios (nome, email) VALUES (?, ?)';
-  db.query(sql, [nome, email], (err, result) => {
+  const newUser = new User({
+    nome,
+    email,
+    // Atribua outros campos conforme necessário
+  });
+
+  newUser.save((err) => {
     if (err) {
-      console.error('Erro ao cadastrar usuário:', err);
-      res.status(500).json({ error: 'Erro interno no servidor' });
+      res.status(500).send('Erro ao cadastrar usuário');
     } else {
-      console.log('Usuário cadastrado com sucesso!');
-      res.status(201).json({ message: 'Usuário cadastrado com sucesso' });
+      res.status(201).send('Usuário cadastrado com sucesso');
     }
   });
 });
 
+// Inicia o servidor
 app.listen(port, () => {
-  console.log(`Servidor está escutando na porta ${port}`);
+  console.log(`Servidor rodando na porta ${port}`);
 });
